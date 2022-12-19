@@ -1,4 +1,4 @@
-# JSON-DEFAULTS.py #
+# json_defaults.py #
 
 Default functions and default function generators to make `json` serialization
 with the python standard library easier.
