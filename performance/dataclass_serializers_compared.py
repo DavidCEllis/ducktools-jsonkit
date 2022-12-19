@@ -68,6 +68,15 @@ time_cache = timeit(
     number=ITERATIONS,
 )
 
+time_orjson_naive = timeit(
+    lambda: orjson.dumps(
+        objects_as_dataclass,
+        option=orjson.OPT_PASSTHROUGH_DATACLASS,
+        default=naive_default
+    ).decode("UTF-8"),
+    number=ITERATIONS
+)
+
 time_orjson_simple = timeit(
     lambda: orjson.dumps(
         objects_as_dataclass,
@@ -91,10 +100,12 @@ time_orjson = timeit(
     number=ITERATIONS
 )
 
-print("Times:")
-print(f"Naive Default:  {time_naive:.3f}  |  {time_naive/time_orjson:4.1f}")
-print(f"Simple Default: {time_simple:.3f}  |  {time_simple/time_orjson:4.1f}")
-print(f"Cached Default: {time_cache:.3f}  |  {time_cache/time_orjson:4.1f}")
-print(f"ORJSON Simple:  {time_orjson_simple:.3f}  |  {time_orjson_simple/time_orjson:4.1f}")
-print(f"ORJSON Cached:  {time_orjson_cache:.3f}  |  {time_orjson_cache/time_orjson:4.1f}")
-print(f"ORJSON:         {time_orjson:.3f}  |  {time_orjson/time_orjson:4.1f}")
+print("Method        | Time    | Time /JSON Cached")
+print("------------- | ------- | -----------------")
+print(f"JSON asdict   |  {time_naive:.3f}  |  {time_naive/time_cache:5.2f}")
+print(f"JSON Simple   |  {time_simple:.3f}  |  {time_simple/time_cache:5.2f}")
+print(f"JSON Cached   |  {time_cache:.3f}  |  {time_cache/time_cache:5.2f}")
+print(f"ORJSON asdict |  {time_orjson_naive:.3f}  |  {time_orjson_naive/time_cache:5.2f}")
+print(f"ORJSON Simple |  {time_orjson_simple:.3f}  |  {time_orjson_simple/time_cache:5.2f}")
+print(f"ORJSON Cached |  {time_orjson_cache:.3f}  |  {time_orjson_cache/time_cache:5.2f}")
+print(f"ORJSON Native |  {time_orjson:.3f}  |  {time_orjson/time_cache:5.2f}")
