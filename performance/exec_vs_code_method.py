@@ -1,3 +1,10 @@
+"""
+Based on ORJSON's dataclasses performance test.
+
+This is here to show that the 'exec' method of creating a default maker is faster
+than using getattr().
+"""
+
 import dataclasses
 
 from timeit import timeit
