@@ -12,7 +12,7 @@ import orjson
 from json_defaults.dataclasses import dc_default
 
 
-ITERATIONS = 500
+ITERATIONS = 100
 
 
 # NAIVE SERIALIZER #
