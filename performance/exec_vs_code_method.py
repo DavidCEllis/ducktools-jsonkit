@@ -10,10 +10,10 @@ import dataclasses
 from timeit import timeit
 
 import json
-from json_defaults.methods import defaultmaker
+from json_defaults.methods import make_default
 
 
-ITERATIONS = 500
+ITERATIONS = 10
 
 
 def old_defaultmaker(method_name):
@@ -59,7 +59,7 @@ objects_as_dataclass = [
 ]
 
 
-new_default = defaultmaker('asdict')
+new_default = make_default('asdict')
 old_default = old_defaultmaker('asdict')
 
 assert json.dumps(objects_as_dataclass, default=new_default) == json.dumps(objects_as_dataclass, default=old_default)

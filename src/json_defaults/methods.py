@@ -1,4 +1,4 @@
-def defaultmaker(method_name):
+def make_default(method_name):
     try_statement = (
         "    try: \n"
         f"        return o.{method_name}()\n"
