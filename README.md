@@ -11,20 +11,19 @@ that are not natively serializable. This is unnecessary. The serialization metho
 `dump` and `dumps` provide a `default` argument which achieves the same result 
 without needing to subclass.
 
-However, there seems to be some desire for either a registry or some `__json__`
-magic method to 'improve' the situation. I disagree with the idea of a global
-registry or using a fixed method name (that in some modules alreayd has uses).
-
-This module provides some methods 
+This module provides some functions and function generators that can be used as
+values for this `default` argument to serialize some standard classes and custom
+classes.
 
 
-## Wait, did I see you use exec ##
+## Exec? ##
 
-Yes. 
+Yes this uses exec. 
 
 While calling exec is slow, the resulting static functions are faster than their
-dynamic equivalents. This is noticeable when serializing a lot of the same
-class. As the results are cached, the cost of `exec` is only paid the first time.
+dynamic equivalents. This is noticeable when serializing a lot of instances of 
+the same class. As the results are cached, the cost of `exec` is only paid the 
+first time.
 
 ## Methods ##
 
@@ -47,7 +46,6 @@ Example:
 >>> json.dumps(example, default=default)
 '{"x": "hello", "y": "world"}'
 ```
-
 
 ## Register ##
 
