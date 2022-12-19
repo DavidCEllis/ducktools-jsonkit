@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="json_defaults"
+description="Utilities to assist in serializing arbitrary python classes to JSON"
+authors = [
+  { name="David C Ellis" },
+]
+readme="README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dynamic = ['version']
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.dynamic]
+version = {attr = "json_defaults.__version__"}
+
+[project.optional-dependencies]
+testing = ["pytest", "pytest-cov"]
+docs = ["sphinx", "myst-parser", "sphinx_rtd_theme"]
+build = ["build", "twine"]
+
+[project.urls]
+"Homepage" = "https://github.com/davidcellis/JsonDefaults"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
