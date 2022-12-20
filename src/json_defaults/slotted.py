@@ -9,9 +9,9 @@ def _slot_serializer(slot_field):
     names = ", ".join(f"'{field}': o.{field}" for field in slot_field)
     func = f"def new_default(o): return {{{names}}}"
 
-    globs, locs = {}, {}
-    exec(func, globs, locs)
-    return locs["new_default"]
+    globs = {}
+    exec(func, globs)
+    return globs["new_default"]
 
 
 def slot_default(o):

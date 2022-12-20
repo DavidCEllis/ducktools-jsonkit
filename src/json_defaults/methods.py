@@ -1,15 +1,23 @@
-def make_default(method_name):
-    try_statement = (
-        "    try: \n"
+from functools import lru_cache
+
+
+@lru_cache
+def default_method(method_name):
+    """
+    Given a method name, create a `default` function for json.dumps
+    that will serialize any objects that have that method.
+
+    :param method_name: name of the method that assists in serializing
+    :return: default function to provide to json.dumps
+    """
+    body = (
+        f"def default(o):\n"
+        f"    try:\n"
         f"        return o.{method_name}()\n"
-    )
-    except_statement = (
-        "    except AttributeError: \n"
+        "    except AttributeError:\n"
         "        raise TypeError(f'Object of type {type(o).__name__} is not JSON serializable')\n"
     )
-    def_statement = "def default(o): \n"
-    body = f"{def_statement}{try_statement}{except_statement}\n"
 
-    globs, locs = {}, {}
-    exec(body, globs, locs)
-    return locs['default']
+    globs = {}
+    exec(body, globs)
+    return globs['default']

@@ -11,7 +11,7 @@ from timeit import timeit
 import dataclasses
 
 import json
-from json_defaults.dataclasses import dc_default, _dc_defaultmaker
+from json_defaults.dataclasses import dataclass_default, _dc_defaultmaker
 
 ITERATIONS = 50
 
@@ -39,7 +39,7 @@ total_cache_time = 0
 for i in range(ITERATIONS):
     obj = Object(i, f"{i}")
     total_time += timeit(lambda: json.dumps(obj, default=old_dc_default), number=1)
-    total_cache_time += timeit(lambda: json.dumps(obj, default=dc_default), number=1)
+    total_cache_time += timeit(lambda: json.dumps(obj, default=dataclass_default), number=1)
     _dc_defaultmaker.cache_clear()
 
 print(f"{ITERATIONS} Serializations with cleared Cache: ")
@@ -48,7 +48,7 @@ print(f"Exec Cached Method: {total_cache_time}")
 
 
 total_time = timeit(lambda: json.dumps(obj, default=old_dc_default), number=ITERATIONS)
-total_cache_time = timeit(lambda: json.dumps(obj, default=dc_default), number=ITERATIONS)
+total_cache_time = timeit(lambda: json.dumps(obj, default=dataclass_default), number=ITERATIONS)
 
 print(f"{ITERATIONS} Serializations with cached function: ")
 print(f"Basic Method: {total_time}")

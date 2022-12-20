@@ -16,19 +16,30 @@ def _dc_defaultmaker(cls, exclude_fields=None):
                          for item in dataclasses.fields(cls))
     out_dict = f"{{{vals}}}"
     funcdef = f"def asdict(self): return {out_dict}"
-    globs, locs = {}, {}
-    exec(funcdef, globs, locs)
-    method = locs['asdict']
+    globs = {}
+    exec(funcdef, globs)
+    method = globs['asdict']
     return method
 
 
-def make_default_excludes(exclude_fields: tuple[str]):
-    def dc_excludes_default(o):
+def make_dataclass_default(exclude_fields: tuple[str]):
+    """
+    Make a 'default' function to serialize dataclasses that will
+    exclude specific named fields.
+
+    :param exclude_fields: tuple of field names to exclude from serialization.
+    :return: 'default' function to use with json.dumps
+    """
+    def dataclass_excludes_default(o):
         method = _dc_defaultmaker(type(o), exclude_fields)
         return method(o)
-    return dc_excludes_default
+    return dataclass_excludes_default
 
 
-def dc_default(o):
+def dataclass_default(o):
+    """
+    Function to provide to `json.dumps` to allow basic serialization
+    of dataclass objects.
+    """
     method = _dc_defaultmaker(type(o))
     return method(o)

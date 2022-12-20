@@ -13,7 +13,7 @@ import orjson
 # import ujson
 # import rapidjson
 
-from json_defaults.dataclasses import dc_default
+from json_defaults.dataclasses import dataclass_default
 
 
 ITERATIONS = 100
@@ -52,14 +52,14 @@ objects_as_dataclass = [
 
 result_naive = json.dumps(objects_as_dataclass, default=naive_default)
 result_simple = json.dumps(objects_as_dataclass, default=old_dc_default)
-result_cache = json.dumps(objects_as_dataclass, default=dc_default)
+result_cache = json.dumps(objects_as_dataclass, default=dataclass_default)
 
 # Check they all output the same thing
 assert result_naive == result_simple == result_cache
 
 orjson_naive = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=naive_default)
 orjson_simple = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=old_dc_default)
-orjson_cache = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=dc_default)
+orjson_cache = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=dataclass_default)
 orjson_native = orjson.dumps(objects_as_dataclass, option=orjson.OPT_SERIALIZE_DATACLASS)
 
 assert orjson_naive == orjson_simple == orjson_cache == orjson_native
@@ -75,7 +75,7 @@ time_simple = timeit(
 )
 
 time_cache = timeit(
-    lambda: json.dumps(objects_as_dataclass, default=dc_default),
+    lambda: json.dumps(objects_as_dataclass, default=dataclass_default),
     number=ITERATIONS,
 )
 
@@ -101,7 +101,7 @@ time_orjson_cache = timeit(
     lambda: orjson.dumps(
         objects_as_dataclass,
         option=orjson.OPT_PASSTHROUGH_DATACLASS,
-        default=dc_default
+        default=dataclass_default
     ).decode("UTF-8"),
     number=ITERATIONS
 )
