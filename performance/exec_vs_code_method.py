@@ -13,7 +13,7 @@ import json
 from json_defaults.methods import make_default
 
 
-ITERATIONS = 10
+ITERATIONS = 100
 
 
 def old_defaultmaker(method_name):
@@ -27,7 +27,7 @@ def old_defaultmaker(method_name):
     def default(o):
         try:
             return getattr(o, method_name)()
-        except (AttributeError, TypeError):
+        except AttributeError:
             raise TypeError(
                 f"Object of type {type(o).__name__} is not JSON serializable"
             )
@@ -62,7 +62,10 @@ objects_as_dataclass = [
 new_default = make_default('asdict')
 old_default = old_defaultmaker('asdict')
 
-assert json.dumps(objects_as_dataclass, default=new_default) == json.dumps(objects_as_dataclass, default=old_default)
+new_data = json.dumps(objects_as_dataclass, default=new_default)
+old_data = json.dumps(objects_as_dataclass, default=old_default)
+
+assert new_data == old_data
 
 new_time = timeit(
     lambda: json.dumps(objects_as_dataclass, default=new_default),
