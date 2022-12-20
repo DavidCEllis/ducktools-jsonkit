@@ -1,6 +1,6 @@
 # json_defaults.py #
 
-Default functions and default function generators to make `json` serialization
+Default functions and default function generators to make JSON serialization
 with the python standard library easier.
 
 ## Motivation ##
