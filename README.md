@@ -15,6 +15,10 @@ This module provides some functions and function generators that can be used as
 values for this `default` argument to serialize some standard classes and custom
 classes.
 
+Unlike `JSONEncoder` subclasses, `default` functions are also supported as arguments
+in some other libraries that implement their own JSON serialization such as
+[orjson](https://github.com/ijl/orjson) or
+[rapidjson](https://github.com/python-rapidjson/python-rapidjson).
 
 ## Exec? ##
 
@@ -62,6 +66,33 @@ and their values.
 
 ## Dataclasses ##
 
+Python's `dataclasses` module does provide an `asdict` module that could
+be used to prepare the data for serialization. However this method 
+performs all of the recursion itself and calls `deepcopy` on every object
+it eventually reaches, which is unnecessary for the use case of serialization.
+
 The `json_defaults.dataclasses` module provides a serializer for dataclasses
-that is around 3x faster than the asdict method provided by dataclasses if it is 
+that is around 3x faster than the this method provided by dataclasses if it is 
 being used for the purposes of JSON serialization.
+
+This is not as fast as orjson's builtin decoder, but can be useful where orjson
+is not available.
+
+Performance:
+Using a slightly modified version of `orjson`'s dataclasses test.
+
+`asdict` - The `asdict` method from the dataclasses module
+           this is what orjson used in its original test
+`simple` - a basic { field.name: getattr(inst, field.name) } comprehension
+`cached` - The exec/cache based default provided by this module
+`native` - `orjson`'s fast dataclass serializer
+
+| Method           | Time    | Time /orjson native |
+| ---------------- | ------- | ------------------- |
+| json asdict      |  9.048  |   28.7 |
+| json simple      |  4.855  |   15.4 |
+| json cached      |  2.632  |    8.3 |
+| orjson asdict    |  7.206  |   22.8 |
+| orjson simple    |  2.907  |    9.2 |
+| orjson cached    |  0.824  |    2.6 |
+| orjson native    |  0.315  |    1.0 |

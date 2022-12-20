@@ -1,5 +1,6 @@
 """
 Based on ORJSON's dataclasses performance test.
+https://github.com/ijl/orjson/blob/master/script/pydataclass
 
 This is here to compare different 'default' methods for serializing dataclasses
 """
@@ -9,6 +10,9 @@ import dataclasses
 
 import json
 import orjson
+# import ujson
+# import rapidjson
+
 from json_defaults.dataclasses import dc_default
 
 
@@ -52,6 +56,13 @@ result_cache = json.dumps(objects_as_dataclass, default=dc_default)
 
 # Check they all output the same thing
 assert result_naive == result_simple == result_cache
+
+orjson_naive = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=naive_default)
+orjson_simple = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=old_dc_default)
+orjson_cache = orjson.dumps(objects_as_dataclass, option=orjson.OPT_PASSTHROUGH_DATACLASS, default=dc_default)
+orjson_native = orjson.dumps(objects_as_dataclass, option=orjson.OPT_SERIALIZE_DATACLASS)
+
+assert orjson_naive == orjson_simple == orjson_cache == orjson_native
 
 time_naive = timeit(
     lambda: json.dumps(objects_as_dataclass, default=naive_default),
@@ -100,12 +111,24 @@ time_orjson = timeit(
     number=ITERATIONS
 )
 
-print("Method        | Time    | Time /JSON Cached")
-print("------------- | ------- | -----------------")
-print(f"JSON asdict   |  {time_naive:.3f}  |  {time_naive/time_cache:5.2f}")
-print(f"JSON Simple   |  {time_simple:.3f}  |  {time_simple/time_cache:5.2f}")
-print(f"JSON Cached   |  {time_cache:.3f}  |  {time_cache/time_cache:5.2f}")
-print(f"ORJSON asdict |  {time_orjson_naive:.3f}  |  {time_orjson_naive/time_cache:5.2f}")
-print(f"ORJSON Simple |  {time_orjson_simple:.3f}  |  {time_orjson_simple/time_cache:5.2f}")
-print(f"ORJSON Cached |  {time_orjson_cache:.3f}  |  {time_orjson_cache/time_cache:5.2f}")
-print(f"ORJSON Native |  {time_orjson:.3f}  |  {time_orjson/time_cache:5.2f}")
+# time_rapidjson = timeit(
+#     lambda: rapidjson.dumps(objects_as_dataclass, default=dc_default),
+#     number=ITERATIONS
+# )
+
+# time_ujson = timeit(
+#     lambda: ujson.dumps(objects_as_dataclass, default=dc_default),
+#     number=ITERATIONS
+# )
+
+print("| Method           | Time    | Time /orjson native |")
+print("| ---------------- | ------- | ------------------- |")
+print(f"| json asdict      |  {time_naive:.3f}  |  {time_naive/time_orjson:5.1f} |")
+print(f"| json simple      |  {time_simple:.3f}  |  {time_simple/time_orjson:5.1f} |")
+print(f"| json cached      |  {time_cache:.3f}  |  {time_cache/time_orjson:5.1f} |")
+print(f"| orjson asdict    |  {time_orjson_naive:.3f}  |  {time_orjson_naive/time_orjson:5.1f} |")
+print(f"| orjson simple    |  {time_orjson_simple:.3f}  |  {time_orjson_simple/time_orjson:5.1f} |")
+print(f"| orjson cached    |  {time_orjson_cache:.3f}  |  {time_orjson_cache/time_orjson:5.1f} |")
+print(f"| orjson native    |  {time_orjson:.3f}  |  {time_orjson/time_orjson:5.1f} |")
+# print(f"| rapidjson Cached |  {time_rapidjson:.3f}  |  {time_rapidjson/time_orjson:5.1f} |")
+# print(f"| ujson Cached     |  {time_ujson:.3f}  |  {time_ujson/time_orjson:5.1f} |")
