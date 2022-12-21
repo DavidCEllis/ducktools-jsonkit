@@ -1,10 +1,9 @@
 from functools import lru_cache
 
-import dataclasses
-
 
 @lru_cache
 def _dc_defaultmaker(cls, exclude_fields=None):
+    import dataclasses
     if not dataclasses.is_dataclass(cls):
         raise TypeError(f"Object of type {cls.__name__} is not JSON serializable")
     if exclude_fields:
