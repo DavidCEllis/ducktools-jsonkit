@@ -214,10 +214,11 @@ Output:
 
 ## Dataclasses ##
 
-Python's `dataclasses` module does provide an `asdict` module that could
+Python's `dataclasses` module does provide an `asdict` function that could
 be used to prepare the data for serialization. However this method 
 performs all of the recursion itself and calls `deepcopy` on every object
-it eventually reaches, which is unnecessary for the use case of serialization.
+it eventually reaches, which is unnecessary overhead for the use case of 
+serialization.
 
 The `json_defaults.dataclasses` module provides a serializer for dataclasses
 that is around 3x faster than the this method provided by dataclasses if it is 
@@ -229,11 +230,11 @@ is not available.
 Performance:
 Using a slightly modified version of `orjson`'s dataclasses test.
 
-`asdict` - The `asdict` method from the dataclasses module
-           this is what orjson used in its original test
-`simple` - a basic { field.name: getattr(inst, field.name) } comprehension
-`cached` - The exec/cache based default provided by this module
-`native` - `orjson`'s fast dataclass serializer
+* `asdict` - The `asdict` method from the dataclasses module
+             this is what orjson used in its original test
+* `simple` - `{ field.name: getattr(dc, field.name) for field in fields(dc) }`
+* `cached` - The exec/cache based default provided by this module
+* `native` - `orjson`'s fast dataclass serializer
 
 | Method           | Time    | Time /orjson native |
 | ---------------- | ------- | ------------------- |
