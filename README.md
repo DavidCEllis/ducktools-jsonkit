@@ -70,7 +70,7 @@ The `metadefault` function combines multiple `default` functions into one.
 ```python
 import json
 from pathlib import Path
-from json_defaults import metadefault
+from json_defaults.metadefault import metadefault
 
 
 def path_default(pth):
