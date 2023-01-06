@@ -7,13 +7,13 @@ def path_default(pth):
     if isinstance(pth, Path):
         return str(pth)
     else:
-        raise TypeError
+        raise TypeError()
 
 def set_default(s):
     if isinstance(s, set):
         return list(s)
     else:
-        raise TypeError
+        raise TypeError()
 
 new_default = metadefault(path_default, set_default)
 
