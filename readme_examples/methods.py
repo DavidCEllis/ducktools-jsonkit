@@ -11,5 +11,13 @@ class Example:
 
 
 example = Example("hello", "world")
+
+# dumps
 data = json.dumps(example, default=method_default('asdict'))
+
+# encoder
+encoder = json.JSONEncoder(default=method_default('asdict'))
+encoder_data = encoder.encode(example)
+
+print(encoder_data == data)
 print(data)

@@ -20,6 +20,12 @@ in some other libraries that implement their own JSON serialization such as
 [orjson](https://github.com/ijl/orjson) or
 [rapidjson](https://github.com/python-rapidjson/python-rapidjson).
 
+If you're using the `encode` method on a `JSONEncoder` class directly you can provide
+the `default` function as an argument to `JSONEncoder` in the same way as to `dumps`.
+If `dumps` is being called multiple times with a default, creating a `JSONEncoder` instance
+and calling the `encode` method directly will be faster as `dumps` creates a new instance
+each time it is called.
+
 ## Exec? ##
 
 Yes this uses exec. 
@@ -54,12 +60,21 @@ class Example:
        return {'x': self.x, 'y': self.y}
        
 example = Example("hello", "world")
+
+# dumps
 data = json.dumps(example, default=method_default('asdict'))
+
+# encoder
+encoder = json.JSONEncoder(default=method_default('asdict'))
+encoder_data = encoder.encode(example)
+
+print(encoder_data == data)
 print(data)
 ```
 
 Output:
 ```
+True
 {"x": "hello", "y": "world"}
 ```
 
