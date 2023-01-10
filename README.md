@@ -38,7 +38,7 @@ you should use `cattrs` for serialization.
 
 ## Methods ##
 
-The `default_method` function is provided to create a `default` function to pass
+The `method_default` function is provided to create a `default` function to pass
 to json.dumps if you have classes with a method that is intended to prepare
 them for serialization.
 
