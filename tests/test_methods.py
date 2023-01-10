@@ -1,5 +1,5 @@
 import json
-from json_defaults.methods import default_method
+from json_defaults import method_default
 
 
 def test_methods_asdict():
@@ -12,7 +12,7 @@ def test_methods_asdict():
 
 
     example = Example("hello", "world")
-    data = json.dumps(example, default=default_method('asdict'))
+    data = json.dumps(example, default=method_default('asdict'))
     output = '{"x": "hello", "y": "world"}'
 
     assert data == output

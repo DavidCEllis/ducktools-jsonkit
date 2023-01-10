@@ -46,7 +46,7 @@ Example:
 
 ```python
 import json
-from json_defaults.methods import default_method
+from json_defaults import method_default
 class Example:
    def __init__(self, x, y):
        self.x, self.y = x, y
@@ -54,7 +54,7 @@ class Example:
        return {'x': self.x, 'y': self.y}
        
 example = Example("hello", "world")
-data = json.dumps(example, default=default_method('asdict'))
+data = json.dumps(example, default=method_default('asdict'))
 print(data)
 ```
 
@@ -63,14 +63,14 @@ Output:
 {"x": "hello", "y": "world"}
 ```
 
-## Metadefault ##
+## Merge defaults ##
 
-The `metadefault` function combines multiple `default` functions into one.
+The `mergedefaults` function combines multiple `default` functions into one.
 
 ```python
 import json
 from pathlib import Path
-from json_defaults.metadefault import metadefault
+from json_defaults import merge_defaults
 
 
 def path_default(pth):
@@ -79,13 +79,15 @@ def path_default(pth):
     else:
         raise TypeError()
 
+
 def set_default(s):
     if isinstance(s, set):
         return list(s)
     else:
         raise TypeError()
 
-new_default = metadefault(path_default, set_default)
+
+new_default = merge_defaults(path_default, set_default)
 
 data = {"Path": Path("usr/bin/python"), "versions": {'3.9', '3.10', '3.11'}}
 
@@ -99,13 +101,13 @@ Output:
 
 ## Register ##
 
-The register module provides a `JSONRegister` class that provides methods
+The module provides a `JSONRegister` class that provides methods
 to add classes and their serialization methods to the register, these are 
 then used by providing the `JSONRegister` instance `default` to `json.dumps`.
 
 Example:
 ```python
-from json_defaults.register import JSONRegister
+from json_defaults import JSONRegister
 
 import json
 import dataclasses
@@ -167,50 +169,6 @@ Output:
 }
 ```
 
-## Slotted ##
-
-If your classes have the fields you wish to serialize defined in `__slots__` then
-`json_defaults.slotted` provides the `slot_default` function that will 
-automatically find these fields and construct a dict of the field names
-and their values.
-
-Note that this requires `__slots__` to contain the slot names so it will not
-work if an iterator was used and is now empty. Ideally slots should be a 
-tuple as it must be hashable for the caching to work correctly.
-
-Example:
-```python
-from json_defaults.slotted import slot_default
-import json
-
-
-class Demo:
-    __slots__ = ('id', 'name', 'number')
-
-    def __init__(self, id, name, number):
-        self.id, self.name, self.number = id, name, number
-
-
-data = {f"key {i}": Demo(i, f"key {i}", (i+1)*42) for i in range(2)}
-
-print(json.dumps(data, default=slot_default, indent=2))
-```
-
-Output:
-```
-{
-  "key 0": {
-    "id": 0,
-    "name": "key 0",
-    "number": 42
-  },
-  "key 1": {
-    "id": 1,
-    "name": "key 1",
-    "number": 84
-  }
-}
-```
 
 ## Dataclasses ##
 
@@ -220,7 +178,7 @@ performs all of the recursion itself and calls `deepcopy` on every object
 it eventually reaches, which is unnecessary overhead for the use case of 
 serialization.
 
-The `json_defaults.dataclasses` module provides a serializer for dataclasses
+This module provides a serializer for dataclasses
 that is around 3x faster than the this method provided by dataclasses if it is 
 being used for the purposes of JSON serialization.
 

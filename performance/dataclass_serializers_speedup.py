@@ -11,7 +11,7 @@ from timeit import timeit
 import dataclasses
 
 import json
-from json_defaults.dataclasses import dataclass_default, _dc_defaultmaker
+from json_defaults import dataclass_default, _dc_defaultmaker
 
 ITERATIONS = 50
 

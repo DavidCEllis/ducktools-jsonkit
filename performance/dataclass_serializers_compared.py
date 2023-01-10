@@ -13,7 +13,7 @@ import orjson
 # import ujson
 # import rapidjson
 
-from json_defaults.dataclasses import dataclass_default
+from json_defaults import dataclass_default
 
 
 ITERATIONS = 100
