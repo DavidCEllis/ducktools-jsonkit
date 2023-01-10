@@ -36,6 +36,15 @@ def merge_defaults(*defaults):
 # Serialize by field names
 @lru_cache
 def field_default(fieldnames: tuple[str]):
+    """
+    Create a function that will take an object and return a {fieldname: obj.fieldname, ...}
+    dictionary.
+
+    (Fieldnames must be hashable so can not be a list.)
+
+    :param fieldnames: tuple of fieldnames
+    :return: dict conversion function
+    """
     vals = ", ".join(f"'{fieldname}': o.{fieldname}"
                      for fieldname in fieldnames)
     out_dict = f"{{{vals}}}"
