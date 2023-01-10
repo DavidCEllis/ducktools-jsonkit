@@ -1,5 +1,5 @@
 import json
-from json_defaults.methods import default_method
+from json_defaults import method_default
 
 
 class Example:
@@ -11,5 +11,5 @@ class Example:
 
 
 example = Example("hello", "world")
-data = json.dumps(example, default=default_method('asdict'))
+data = json.dumps(example, default=method_default('asdict'))
 print(data)

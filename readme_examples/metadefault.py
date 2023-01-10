@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from json_defaults import metadefault
+from json_defaults import merge_defaults
 
 
 def path_default(pth):
@@ -15,7 +15,7 @@ def set_default(s):
     else:
         raise TypeError()
 
-new_default = metadefault(path_default, set_default)
+new_default = merge_defaults(path_default, set_default)
 
 data = {"Path": Path("usr/bin/python"), "versions": {'3.9', '3.10', '3.11'}}
 

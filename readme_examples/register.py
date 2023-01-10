@@ -1,4 +1,4 @@
-from json_defaults.register import JSONRegister
+from json_defaults import JSONRegister
 
 import json
 import dataclasses
