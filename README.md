@@ -65,7 +65,7 @@ Output:
 
 ## Merge defaults ##
 
-The `mergedefaults` function combines multiple `default` functions into one.
+The `merge_defaults` function combines multiple `default` functions into one.
 
 ```python
 import json
