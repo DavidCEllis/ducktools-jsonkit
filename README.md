@@ -1,4 +1,4 @@
-# json_defaults.py #
+# ducktools-jsondefaults #
 
 Default functions and default function generators to make JSON serialization
 with the python standard library easier.
@@ -52,7 +52,7 @@ Example:
 
 ```python
 import json
-from json_defaults import method_default
+from ducktools.jsondefaults import method_default
 class Example:
    def __init__(self, x, y):
        self.x, self.y = x, y
@@ -85,7 +85,7 @@ The `merge_defaults` function combines multiple `default` functions into one.
 ```python
 import json
 from pathlib import Path
-from json_defaults import merge_defaults
+from ducktools.jsondefaults import merge_defaults
 
 
 def path_default(pth):
@@ -122,7 +122,7 @@ then used by providing the `JSONRegister` instance `default` to `json.dumps`.
 
 Example:
 ```python
-from json_defaults import JSONRegister
+from ducktools.jsondefaults import JSONRegister
 
 import json
 import dataclasses
@@ -196,7 +196,7 @@ in `__slots__` (will not work on slots defined by a consumed iterable).
 ```python
 import json
 from functools import lru_cache
-from json_defaults import field_default
+from ducktools.jsondefaults import field_default
 
 
 @lru_cache

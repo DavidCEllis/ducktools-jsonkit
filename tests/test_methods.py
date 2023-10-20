@@ -1,5 +1,5 @@
 import json
-from json_defaults import method_default
+from ducktools.jsondefaults import method_default
 
 
 def test_methods_asdict():
@@ -9,7 +9,6 @@ def test_methods_asdict():
 
         def asdict(self):
             return {'x': self.x, 'y': self.y}
-
 
     example = Example("hello", "world")
     data = json.dumps(example, default=method_default('asdict'))

@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-__version__ = "v0.0.2"
+__version__ = "v0.0.3"
 
 __all__ = [
     "merge_defaults",

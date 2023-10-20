@@ -1,4 +1,4 @@
-from json_defaults import JSONRegister
+from ducktools.jsondefaults import JSONRegister
 
 import json
 import dataclasses
@@ -25,20 +25,27 @@ def test_json_register():
                 'numbers': self.numbers,
             }
 
-
     register.register(Path, str)
-
 
     @register.register_function(Decimal)
     def unstructure_decimal(val):
         return {'cls': 'Decimal', 'value': str(val)}
-
 
     numbers = [Decimal(f"{i}")/Decimal('1000') for i in range(1, 3)]
     pth = Path("usr/bin/python")
 
     demo = Demo(id=42, name="Demonstration Class", location=pth, numbers=numbers)
 
-    output = '{"id": 42, "name": "Demonstration Class", "location": "usr/bin/python", "numbers": [{"cls": "Decimal", "value": "0.001"}, {"cls": "Decimal", "value": "0.002"}]}'
+    pypath = f"{str(pth)!r}".replace("'", '"')
+
+    output = (
+        '{"id": 42, '
+        '"name": "Demonstration Class", '
+        f'"location": {pypath}, '
+        '"numbers": ['
+        '{"cls": "Decimal", "value": "0.001"}, '
+        '{"cls": "Decimal", "value": "0.002"}'
+        ']}'
+    )
 
     assert json.dumps(demo, default=register.default) == output

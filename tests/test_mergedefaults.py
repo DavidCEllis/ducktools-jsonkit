@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
-from json_defaults import merge_defaults
+from ducktools.jsondefaults import merge_defaults
+
 
 def test_metadefault():
     def path_default(pth):
@@ -17,7 +18,14 @@ def test_metadefault():
 
     new_default = merge_defaults(path_default, set_default)
 
-    data = {"Path": Path("usr/bin/python"), "versions": {'3.9', '3.10', '3.11'}}
-    result = '{"Path": "usr/bin/python", "versions": ["3.10", "3.11", "3.9"]}'
+    pth = Path("usr/bin/python")
+    pypath = f"{str(pth)!r}".replace("'", '"')
+
+    data = {"Path": pth, "versions": {'3.9', '3.10', '3.11'}}
+    result = (
+        '{"Path": '
+        f'{pypath}, '
+        '"versions": ["3.10", "3.11", "3.9"]}'
+    )
 
     assert json.dumps(data, default=new_default) == result

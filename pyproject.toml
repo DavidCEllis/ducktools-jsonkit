@@ -6,7 +6,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name="json_defaults"
+name="ducktools-jsondefaults"
 description="Utilities to assist in serializing arbitrary python classes to JSON"
 authors = [
   { name="David C Ellis" },
@@ -23,11 +23,11 @@ classifiers = [
 ]
 dynamic = ['version']
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.dynamic]
-version = {attr = "json_defaults.__version__"}
+version = {attr = "ducktools.jsondefaults.__version__"}
 
 [project.optional-dependencies]
 testing = ["pytest", "pytest-cov"]
