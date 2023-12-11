@@ -1,5 +1,5 @@
 import json
-from ducktools.jsondefaults import method_default
+from ducktools.jsonkit import method_default
 
 
 def test_methods_asdict():

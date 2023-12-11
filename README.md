@@ -52,13 +52,17 @@ Example:
 
 ```python
 import json
-from ducktools.jsondefaults import method_default
+from ducktools.jsonkit import method_default
+
+
 class Example:
-   def __init__(self, x, y):
-       self.x, self.y = x, y
-   def asdict(self):
-       return {'x': self.x, 'y': self.y}
-       
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
+    def asdict(self):
+        return {'x': self.x, 'y': self.y}
+
+
 example = Example("hello", "world")
 
 # dumps
@@ -85,7 +89,7 @@ The `merge_defaults` function combines multiple `default` functions into one.
 ```python
 import json
 from pathlib import Path
-from ducktools.jsondefaults import merge_defaults
+from ducktools.jsonkit import merge_defaults
 
 
 def path_default(pth):
@@ -121,8 +125,9 @@ to add classes and their serialization methods to the register, these are
 then used by providing the `JSONRegister` instance `default` to `json.dumps`.
 
 Example:
+
 ```python
-from ducktools.jsondefaults import JSONRegister
+from ducktools.jsonkit import JSONRegister
 
 import json
 import dataclasses
@@ -157,7 +162,7 @@ def unstructure_decimal(val):
     return {'cls': 'Decimal', 'value': str(val)}
 
 
-numbers = [Decimal(f"{i}")/Decimal('1000') for i in range(1, 3)]
+numbers = [Decimal(f"{i}") / Decimal('1000') for i in range(1, 3)]
 pth = Path("usr/bin/python")
 
 demo = Demo(id=42, name="Demonstration Class", location=pth, numbers=numbers)
@@ -196,7 +201,7 @@ in `__slots__` (will not work on slots defined by a consumed iterable).
 ```python
 import json
 from functools import lru_cache
-from ducktools.jsondefaults import field_default
+from ducktools.jsonkit import field_default
 
 
 @lru_cache
@@ -216,6 +221,7 @@ def slot_default(o):
 
 class SlotExample:
     __slots__ = ['x', 'y']
+
     def __init__(self, x, y):
         self.x, self.y = x, y
 
