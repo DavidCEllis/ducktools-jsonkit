@@ -7,7 +7,7 @@ _laz = LazyImporter([ModuleImport("dataclasses")])
 
 # Serialize by field names
 @lru_cache
-def field_default(fieldnames: tuple[str]):
+def field_default(fieldnames):
     """
     Create a function that will take an object and return a
     {fieldname: obj.fieldname, ...} dictionary.
@@ -36,7 +36,7 @@ def field_default(fieldnames: tuple[str]):
 
 # Serialize Dataclasses
 @lru_cache
-def _dc_defaultmaker(cls: type, exclude_fields: tuple[str] = ()):
+def _dc_defaultmaker(cls, exclude_fields=()):
 
     if not _laz.dataclasses.is_dataclass(cls):
         raise TypeError(f"Object of type {cls.__name__} is not JSON serializable")
@@ -50,7 +50,7 @@ def _dc_defaultmaker(cls: type, exclude_fields: tuple[str] = ()):
     return method
 
 
-def make_dataclass_default(exclude_fields: tuple[str]):
+def make_dataclass_default(exclude_fields):
     """
     Make a 'default' function to serialize dataclasses that will
     exclude specific named fields.

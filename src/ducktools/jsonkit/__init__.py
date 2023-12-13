@@ -11,7 +11,6 @@ __all__ = [
     "JSONRegister",
 ]
 
-
 _laz = LazyImporter(
     [
         MultiFromImport(
@@ -75,6 +74,16 @@ def method_default(method_name):
 
 
 # Register
+class _RegisterDecorator:
+    def __init__(self, func, registry):
+        self.func = func
+        self.registry = registry
+
+    def __set_name__(self, owner, name):
+        self.registry.register(owner, self.func)
+        setattr(owner, name, self.func)
+
+
 class JSONRegister:
     """
     Register methods for serializing classes, provides a 'default' method
@@ -110,19 +119,10 @@ class JSONRegister:
     @property
     def register_method(self):
         """Register a class method as a serializer by using a decorator"""
+        def register(method):
+            return _RegisterDecorator(method, self)
 
-        # Pycharm will complain about using 'inst' and not 'self'
-        # 'self' would not work because it is in the outer scope.
-        # noinspection PyMethodParameters
-        class RegisterDecorator:
-            def __init__(inst, func):
-                inst.func = func
-
-            def __set_name__(inst, owner, name):
-                self.register(owner, inst.func)
-                setattr(owner, name, inst.func)
-
-        return RegisterDecorator
+        return register
 
     def default(self, o):
         """
