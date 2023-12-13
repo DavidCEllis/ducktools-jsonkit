@@ -1,4 +1,4 @@
-# ducktools: jsondefaults #
+# ducktools: jsonkit #
 
 Default functions and default function generators to make JSON serialization
 with the python standard library easier.
