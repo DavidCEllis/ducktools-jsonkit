@@ -5,18 +5,24 @@ __version__ = "v0.0.3"
 __all__ = [
     "merge_defaults",
     "field_default",  # noqa
-    "method_default",  # noqa
-    "dataclass_default", # noqa
-    "make_dataclass_default", # noqa
+    "method_default",
+    "dataclass_default",  # noqa
+    "make_dataclass_default",  # noqa
     "JSONRegister",
 ]
 
 
 _laz = LazyImporter(
-    [MultiFromImport(
-        "._caching_tools",
-        ["field_default", "method_default", "dataclass_default", "make_dataclass_default"]
-    )],
+    [
+        MultiFromImport(
+            "._caching_tools",
+            [
+                "field_default",
+                "dataclass_default",
+                "make_dataclass_default",
+            ],
+        )
+    ],
     globs=globals(),
 )
 
@@ -33,6 +39,7 @@ def merge_defaults(*defaults):
     :param defaults: 'default' functions for json.dumps
     :return: merged default function
     """
+
     def default(o):
         for func in defaults:
             try:
@@ -40,7 +47,30 @@ def merge_defaults(*defaults):
             except TypeError:
                 pass
         else:
-            raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+            raise TypeError(
+                f"Object of type {type(o).__name__} is not JSON serializable"
+            )
+
+    return default
+
+
+# Serialize using a method name
+def method_default(method_name):
+    """
+    Given a method name, create a `default` function for json.dumps
+    that will serialize any objects that have that method.
+
+    :param method_name: name of the method that assists in serializing
+    :return: default function to provide to json.dumps
+    """
+    def default(o):
+        try:
+            return getattr(o, method_name)()
+        except AttributeError:
+            raise TypeError(
+                f'Object of type {type(o).__name__} is not JSON serializable'
+            )
+
     return default
 
 
@@ -53,6 +83,7 @@ class JSONRegister:
     Provides a method to add a serializer for any class and two decorators
     to decorate functions and class methods to register them as serializers.
     """
+
     def __init__(self):
         self.registry = []
 
@@ -69,9 +100,11 @@ class JSONRegister:
 
     def register_function(self, cls):
         """Register a function as a serializer by using a decorator"""
+
         def wrapper(func):
             self.register(cls, func)
             return func
+
         return wrapper
 
     @property
