@@ -75,6 +75,10 @@ def method_default(method_name):
 
 # Register
 class _RegisterDecorator:
+    """
+    A descriptor used as part of the mechanism to register serializers for classes
+    using a decorator.
+    """
     def __init__(self, func, registry):
         self.func = func
         self.registry = registry
@@ -101,14 +105,25 @@ class JSONRegister:
         Register a function that will convert a class instance into something
         that is serializable by the json.dumps function.
 
-        :param cls: Class object
+        Usage Example: registry.register(Path, str)
+
+        :param cls: Class object to use to identify objects with isinstance
         :param func: Single argument callable that will convert instances of cls
                      into serializable objects
         """
         self.registry.append((cls, func))
 
     def register_function(self, cls):
-        """Register a function as a serializer by using a decorator"""
+        """
+        Register a function as a serializer by using a decorator.
+
+        Usage Example:
+        @registry.register_function(Decimal)
+        def unstructure_decimal(val):
+            return {'cls': 'Decimal', 'value': str(val)}
+
+        :param cls: Class the function is being registered for.
+        """
 
         def wrapper(func):
             self.register(cls, func)
@@ -116,13 +131,40 @@ class JSONRegister:
 
         return wrapper
 
-    @property
-    def register_method(self):
-        """Register a class method as a serializer by using a decorator"""
-        def register(method):
-            return _RegisterDecorator(method, self)
+    def register_method(self, method):
+        """
+        Register a class method as a serializer by using a decorator.
 
-        return register
+        Usage Example:
+        @dataclasses.dataclass
+        class Demo:
+            id: int
+            name: str
+            location: Path
+            numbers: list[Decimal]
+
+            @register.register_method
+            def to_json(self):
+                return {
+                    'id': self.id,
+                    'name': self.name,
+                    'location': self.location,
+                    'numbers': self.numbers,
+                }
+
+        :param method: The method of a class that converts instances to natively
+                       serializable data.
+        """
+
+        # In order for this to work the registry needs to know the class that
+        # provides the method to be decorated.
+
+        # This isn't available by inspecting the function so a descriptor
+        # is created that will be given the class when __set_name__ is called.
+        # This descriptor is a non-data descriptor so can be replaced by
+        # the original function.
+
+        return _RegisterDecorator(method, self)
 
     def default(self, o):
         """
