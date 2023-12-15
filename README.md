@@ -7,8 +7,8 @@ with the python standard library easier.
 
 The documentation for the JSON module in the Python standard library (as of 3.11.1)
 instructs the user to subclass `JSONEncoder` if you wish to serialize objects
-that are not natively serializable. This is unnecessary. The serialization methods 
-`dump` and `dumps` provide a `default` argument which achieves the same result 
+that are not natively serializable. This is unnecessary. The serialization methods
+`dump` and `dumps` provide a `default` argument which achieves the same result
 without needing to subclass.
 
 This module provides some functions and function generators that can be used as
@@ -26,19 +26,21 @@ If `dumps` is being called multiple times with a default, creating a `JSONEncode
 and calling the `encode` method directly will be faster as `dumps` creates a new instance
 each time it is called.
 
-## Exec? ##
+## Generated methods for field and dataclass serialization ##
 
-Yes this uses exec. 
+The serializers for dataclasses and fields exist for cases where you need to 
+encode a large number of instances of the same dataclass (or other objects 
+with the same set of fields).
 
 While calling exec is slow, the resulting static functions are faster than their
-dynamic equivalents. This is noticeable when serializing a lot of instances of 
-the same class. As the results are cached, the cost of `exec` is only paid the 
+dynamic equivalents. This is noticeable when serializing a lot of instances of
+the same class. As the results are cached, the cost of `exec` is only paid the
 first time.
 
-This is actually similar to the method 
+This is actually similar to the method
 [cattrs](https://github.com/python-attrs/cattrs)
-uses, although that module uses `eval(compile(...))` to provide a 'fake' source 
-file for inspections. If you're already using 
+uses, although that module uses `eval(compile(...))` to provide a 'fake' source
+file for inspections. If you're already using
 [attrs](https://github.com/python-attrs/attrs)
 you should use `cattrs` for serialization.
 
@@ -121,7 +123,7 @@ Output:
 ## Register ##
 
 The module provides a `JSONRegister` class that provides methods
-to add classes and their serialization methods to the register, these are 
+to add classes and their serialization methods to the register, these are
 then used by providing the `JSONRegister` instance `default` to `json.dumps`.
 
 Example:
@@ -239,34 +241,44 @@ Result:
 
 ## Dataclasses ##
 
-Python's `dataclasses` module does provide an `asdict` function that could
-be used to prepare the data for serialization. However this method 
-performs all of the recursion itself and calls `deepcopy` on every object
-it eventually reaches, which is unnecessary overhead for the use case of 
+Dataclasses itself provides its own `asdict` function, but unfortunately this
+includes additional logic for deepcopying objects and performing recursive
 serialization.
 
-This module provides a serializer for dataclasses
-that is around 3x faster than the this method provided by dataclasses if it is 
-being used for the purposes of JSON serialization.
+For the purpose of basic serialization of dataclasses a basic non-recursive
+default method will be faster than `asdict`.
 
-This is not as fast as orjson's builtin decoder, but can be useful where orjson
-is not available.
+Note: The `asdict` method has been improved in Python 3.12+ so the difference
+is less significant.
 
-Performance:
-Using a slightly modified version of `orjson`'s dataclasses test.
+```python
+from dataclasses import is_dataclass, fields
+def simple_dc_default(o):
+    if is_dataclass(o) and not isinstance(o, type):
+        return {f.name: getattr(o, f.name) for f in fields(o)}
+    else:
+        raise TypeError(
+            f'Object of type {type(o).__name__} is not JSON serializable'
+        )
+```
 
-* `asdict` - The `asdict` method from the dataclasses module
-             this is what orjson used in its original test
-* `simple` - `{ field.name: getattr(dc, field.name) for field in fields(dc) }`
-* `cached` - The exec/cache based default provided by this module
-* `native` - `orjson`'s fast dataclass serializer
+Using: performance/dataclass_serializers_compared.py
 
-| Method           | Time    | Time /orjson native |
-| ---------------- | ------- | ------------------- |
-| json asdict      |  9.048  |   28.7 |
-| json simple      |  4.855  |   15.4 |
-| json cached      |  2.632  |    8.3 |
-| orjson asdict    |  7.206  |   22.8 |
-| orjson simple    |  2.907  |    9.2 |
-| orjson cached    |  0.824  |    2.6 |
-| orjson native    |  0.315  |    1.0 |
+Comparing `asdict`, `simple_dc_default` (simple) and `dataclass_default` (cached).
+
+Python 3.11
+
+| Method           | Time /s | Time /cache |
+| ---------------- | ------- | ----------- |
+| json asdict      |  8.899  |    3.8 |
+| json simple      |  5.154  |    2.2 |
+| json cached      |  2.353  |    1.0 |
+
+
+Python 3.12
+
+| Method           | Time /s | Time /cache |
+| ---------------- | ------- | ----------- |
+| json asdict      |  3.753  |    2.3 |
+| json simple      |  3.448  |    2.1 |
+| json cached      |  1.657  |    1.0 |
