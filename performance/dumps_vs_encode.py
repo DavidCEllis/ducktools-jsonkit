@@ -2,7 +2,8 @@
 Based on ORJSON's dataclasses performance test.
 https://github.com/ijl/orjson/blob/master/script/pydataclass
 
-This is here to compare using dumps vs creating a JSONEncoder and just timing the encode method.
+This is here to compare using dumps vs creating a JSONEncoder and just timing the
+encode method.
 """
 from timeit import timeit
 
@@ -10,13 +11,13 @@ import dataclasses
 
 import json
 
-from json_defaults import dataclass_default
+from ducktools.jsonkit import dataclass_default
 
 
 ITERATIONS = 100
 
-# DATA INPUT #
 
+# DATA INPUT #
 @dataclasses.dataclass
 class Member:
     id: int
