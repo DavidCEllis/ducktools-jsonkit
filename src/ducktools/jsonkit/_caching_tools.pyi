@@ -9,32 +9,12 @@ from typing import Any
 
 _laz: LazyImporter = ...
 @lru_cache
-def field_default(fieldnames: tuple[str, ...]) -> Callable[[object], Any]:
-    """
-    Create a function that will take an object and return a
-    {fieldname: obj.fieldname, ...} dictionary.
-
-    (Fieldnames must be hashable so can not be a list.)
-
-    :param fieldnames: tuple of fieldnames
-    :return: dict conversion function
-    """
+def field_default(fieldnames: tuple[str, ...]) -> Callable[[Any], Any]:
     ...
 
-def make_dataclass_default(exclude_fields: tuple[str, ...]) -> Callable[[object], Any]:
-    """
-    Make a 'default' function to serialize dataclasses that will
-    exclude specific named fields.
-
-    :param exclude_fields: tuple of field names to exclude from serialization.
-    :return: 'default' function to use with json.dumps
-    """
+def make_dataclass_default(exclude_fields: tuple[str, ...]) -> Callable[[Any], Any]:
     ...
 
-def dataclass_default(o: object) -> Callable[[object], Any]:
-    """
-    Function to provide to `json.dumps` to allow basic serialization
-    of dataclass objects.
-    """
+def dataclass_default(o: Any) -> Any:
     ...
 
