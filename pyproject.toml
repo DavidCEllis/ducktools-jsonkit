@@ -42,3 +42,9 @@ build = ["build", "twine"]
 [tool.black]
 line-length = 88
 target-version = ['py39']
+
+[tool.pytest.ini_options]
+addopts= "--cov=src/ --cov-report=term-missing"
+testpaths = [
+    "tests",
+]
