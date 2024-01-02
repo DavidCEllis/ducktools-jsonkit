@@ -32,10 +32,10 @@ The serializers for dataclasses and fields exist for cases where you need to
 encode a large number of instances of the same dataclass (or other objects 
 with the same set of fields).
 
-While calling exec is slow, the resulting static functions are faster than their
-dynamic equivalents. This is noticeable when serializing a lot of instances of
-the same class. As the results are cached, the cost of `exec` is only paid the
-first time.
+While calling exec usually takes longer than a single naive serialization, 
+the resulting static functions are faster than their dynamic equivalents. 
+This is noticeable when serializing a large number of instances of the same class. 
+As the results are cached, the cost of `exec` is only paid the first time.
 
 This is actually similar to the method
 [cattrs](https://github.com/python-attrs/cattrs)
@@ -249,7 +249,8 @@ For the purpose of basic serialization of dataclasses a basic non-recursive
 default method will be faster than `asdict`.
 
 Note: The `asdict` method has been improved in Python 3.12+ so the difference
-is less significant.
+is less significant. 
+See [https://github.com/python/cpython/issues/103000](https://github.com/python/cpython/issues/103000).
 
 ```python
 from dataclasses import is_dataclass, fields
@@ -270,15 +271,15 @@ Python 3.11
 
 | Method           | Time /s | Time /cache |
 | ---------------- | ------- | ----------- |
-| json asdict      |  8.899  |    3.8 |
-| json simple      |  5.154  |    2.2 |
-| json cached      |  2.353  |    1.0 |
+| json asdict      |  4.492  |    3.9 |
+| json simple      |  2.400  |    2.1 |
+| json cached      |  1.145  |    1.0 |
 
 
 Python 3.12
 
 | Method           | Time /s | Time /cache |
 | ---------------- | ------- | ----------- |
-| json asdict      |  3.753  |    2.3 |
-| json simple      |  3.448  |    2.1 |
-| json cached      |  1.657  |    1.0 |
+| json asdict      |  1.991  |    2.2 |
+| json simple      |  1.910  |    2.1 |
+| json cached      |  0.896  |    1.0 |
