@@ -62,12 +62,13 @@ def method_default(method_name):
     :param method_name: name of the method that assists in serializing
     :return: default function to provide to json.dumps
     """
+
     def default(o):
         try:
             return getattr(o, method_name)()
         except AttributeError:
             raise TypeError(
-                f'Object of type {type(o).__name__} is not JSON serializable'
+                f"Object of type {type(o).__name__} is not JSON serializable"
             )
 
     return default
@@ -79,6 +80,7 @@ class _RegisterDecorator:
     A descriptor used as part of the mechanism to register serializers for classes
     using a decorator.
     """
+
     def __init__(self, func, registry):
         self.func = func
         self.registry = registry
@@ -175,6 +177,4 @@ class JSONRegister:
         for cls, func in self.registry:
             if isinstance(o, cls):
                 return func(o)
-        raise TypeError(
-            f"Object of type {o.__class__.__name__} is not JSON serializable"
-        )
+        raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")

@@ -20,13 +20,13 @@ def field_default(fieldnames):
     vals = ", ".join(f"'{fieldname}': o.{fieldname}" for fieldname in fieldnames)
     out_dict = f"{{{vals}}}"
     funcdef = (
-        "def default(o):\n"
-        "    try:\n"
+        f"def default(o):\n"
+        f"    try:\n"
         f"        return {out_dict}\n"
-        "    except AttributeError:\n"
-        "        raise TypeError(\n"
-        "            f'Object of type {type(o).__name__} is not JSON serializable'\n"
-        "        )\n"
+        f"    except AttributeError:\n"
+        f"        raise TypeError(\n"
+        f"            f'Object of type {{type(o).__name__}} is not JSON serializable'\n"
+        f"        )\n"
     )
     globs = {}
     exec(funcdef, globs)
@@ -37,12 +37,12 @@ def field_default(fieldnames):
 # Serialize Dataclasses
 @lru_cache
 def _dc_defaultmaker(cls, exclude_fields=()):
-
     if not _laz.dataclasses.is_dataclass(cls):
         raise TypeError(f"Object of type {cls.__name__} is not JSON serializable")
 
     field_names = tuple(
-        item.name for item in _laz.dataclasses.fields(cls)
+        item.name
+        for item in _laz.dataclasses.fields(cls)
         if item.name not in exclude_fields
     )
 
