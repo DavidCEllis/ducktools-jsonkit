@@ -1,4 +1,4 @@
-from ducktools.jsondefaults import JSONRegister
+from ducktools.jsonkit import JSONRegister
 
 import json
 import dataclasses

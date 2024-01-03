@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from ducktools.jsondefaults import merge_defaults
+from ducktools.jsonkit import merge_defaults
 
 
 def test_metadefault():

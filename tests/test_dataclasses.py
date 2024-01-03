@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass, field, asdict
-from ducktools.jsondefaults import dataclass_default
+from ducktools.jsonkit import dataclass_default
 
 
 def test_dataclass_tojson():

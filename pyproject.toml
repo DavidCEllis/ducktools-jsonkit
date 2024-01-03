@@ -1,12 +1,11 @@
 [build-system]
 requires = [
     "setuptools>=61.0",
-    "wheel"
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
-name="ducktools-jsondefaults"
+name="ducktools-jsonkit"
 description="Utilities to assist in serializing arbitrary python classes to JSON"
 authors = [
   { name="David C Ellis" },
@@ -21,13 +20,16 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "ducktools-lazyimporter>=0.1.1",
+]
 dynamic = ['version']
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = {attr = "ducktools.jsondefaults.__version__"}
+version = {attr = "ducktools.jsonkit.__version__"}
 
 [project.optional-dependencies]
 testing = ["pytest", "pytest-cov"]
@@ -35,8 +37,14 @@ docs = ["sphinx", "myst-parser", "sphinx_rtd_theme"]
 build = ["build", "twine"]
 
 [project.urls]
-"Homepage" = "https://github.com/davidcellis/JsonDefaults"
+"Homepage" = "https://github.com/davidcellis/ducktools-jsonkit"
 
 [tool.black]
 line-length = 88
-target-version = ['py311']
+target-version = ['py39']
+
+[tool.pytest.ini_options]
+addopts= "--cov=src/ --cov-report=term-missing"
+testpaths = [
+    "tests",
+]

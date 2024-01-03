@@ -11,7 +11,8 @@ from timeit import timeit
 import dataclasses
 
 import json
-from json_defaults import dataclass_default, _dc_defaultmaker
+from ducktools.jsonkit import dataclass_default
+from ducktools.jsonkit._caching_tools import _dc_defaultmaker
 
 ITERATIONS = 50
 
