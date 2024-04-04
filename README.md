@@ -126,6 +126,14 @@ The module provides a `JSONRegister` class that provides methods
 to add classes and their serialization methods to the register, these are
 then used by providing the `JSONRegister` instance `default` to `json.dumps`.
 
+> [!NOTE]
+> The `register_method` decorator **does not work** on slotted dataclasses.
+> @dataclass(slots=True) replaces the original class so instances of the new
+> class are not instances of the original class stored as a reference in the
+> decorator.
+> 
+> Use `register.register(cls, cls.method)` for slotted dataclasses.
+
 Example:
 
 ```python
