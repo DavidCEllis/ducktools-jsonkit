@@ -1,6 +1,8 @@
 from ducktools.lazyimporter import LazyImporter, MultiFromImport, get_module_funcs
+from ducktools.classbuilder import slotclass, SlotFields, Field
 
-__version__ = "v0.0.3"
+
+__version__ = "v0.0.4"
 
 __all__ = [
     "merge_defaults",
@@ -75,21 +77,23 @@ def method_default(method_name):
 
 
 # Register
+@slotclass
 class _RegisterDecorator:
     """
     A descriptor used as part of the mechanism to register serializers for classes
     using a decorator.
     """
-
-    def __init__(self, func, registry):
-        self.func = func
-        self.registry = registry
+    __slots__ = SlotFields(
+        func=Field(),
+        registry=Field(),
+    )
 
     def __set_name__(self, owner, name):
         self.registry.register(owner, self.func)
         setattr(owner, name, self.func)
 
 
+@slotclass
 class JSONRegister:
     """
     Register methods for serializing classes, provides a 'default' method
@@ -99,8 +103,7 @@ class JSONRegister:
     to decorate functions and class methods to register them as serializers.
     """
 
-    def __init__(self):
-        self.registry = []
+    __slots__ = SlotFields(registry=Field(default_factory=list, init=False))
 
     def register(self, cls, func):
         """

@@ -32,6 +32,8 @@ class _RegisterDecorator:
     func: Callable[[Any], Any]
     registry: JSONRegister
 
+    __classbuilder_internals__: dict
+
     def __init__(self, func: Callable[[Any], Any], registry: JSONRegister) -> None: ...
     def __set_name__(self, owner: type, name: str) -> None: ...
 
@@ -39,6 +41,8 @@ _FuncT = TypeVar("_FuncT", bound=Callable[[Any], Any])
 
 class JSONRegister:
     registry: list[tuple[type, Callable[[Any], Any]]]
+
+    __classbuilder_internals__: dict
 
     def __init__(self) -> None: ...
     def register(self, cls: type, func: Callable[..., Any]) -> None: ...
