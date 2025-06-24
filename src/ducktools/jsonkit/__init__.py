@@ -1,8 +1,7 @@
 from ducktools.lazyimporter import LazyImporter, MultiFromImport, get_module_funcs
 from ducktools.classbuilder import slotclass, SlotFields, Field
 
-
-__version__ = "v0.0.4"
+from ._version import __version__
 
 __all__ = [
     "merge_defaults",
