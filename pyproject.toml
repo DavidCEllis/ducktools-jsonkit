@@ -11,6 +11,7 @@ description="Utilities to assist in serializing arbitrary python classes to JSON
 authors = [
   { name="David C Ellis" },
 ]
+license = "MIT"
 readme="README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -19,7 +20,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -40,8 +40,8 @@ __version_tuple__ = {version_tuple}
 
 [project.optional-dependencies]
 docs = [
-    "sphinx>=8.1", 
-    "myst-parser>=4.0", 
+    "sphinx>=8.1",
+    "myst-parser>=4.0",
     "sphinx_rtd_theme>=3.0",
 ]
 
