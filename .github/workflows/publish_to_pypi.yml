@@ -83,5 +83,5 @@ jobs:
       # sigstore-produced signatures and certificates.
       run: >-
         gh release upload
-        '${{ github.ref_name }}' dist/**
-        --repo '${{ github.repository }}'
+        "${GITHUB_REF_NAME}" dist/**
+        --repo "${GITHUB_REPOSITORY}"
