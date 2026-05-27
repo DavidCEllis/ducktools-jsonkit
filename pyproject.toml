@@ -13,13 +13,13 @@ authors = [
 ]
 license = "MIT"
 readme="README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -60,3 +60,11 @@ addopts= "--cov=src/ --cov-report=term-missing"
 testpaths = [
     "tests",
 ]
+
+[tool.uv]
+exclude-newer = "1 week"
+
+[tool.uv.exclude-newer-package]
+# Exclude other projects I own as they may contain early fixes
+ducktools-classbuilder = "1 hour"
+reannotate = "1 hour"
