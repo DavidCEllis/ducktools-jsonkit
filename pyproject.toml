@@ -61,6 +61,9 @@ testpaths = [
     "tests",
 ]
 
+[tool.uv]
+exclude-newer = "1 week"
+
 [tool.uv.exclude-newer-package]
 # Exclude other projects I own as they may contain early fixes
 ducktools-classbuilder = "1 hour"
